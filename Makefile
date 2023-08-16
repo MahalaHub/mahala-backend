@@ -1,6 +1,7 @@
 COVERAGE_FILE = coveragefile
 
 generate:
+	@echo "generating graphql models..."
 	@go generate ./...
 
 test-cover:
