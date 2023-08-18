@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"fmt"
+
 	"github.com/mahalahub/mahala/graph/generated"
 	"github.com/mahalahub/mahala/graph/model"
 )

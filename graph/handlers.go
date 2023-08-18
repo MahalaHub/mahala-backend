@@ -7,7 +7,9 @@ import (
 )
 
 func GinHandler() gin.HandlerFunc {
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &Resolver{}}))
+	conf := generated.Config{Resolvers: &Resolver{}}
+
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(conf))
 
 	return func(c *gin.Context) {
 		srv.ServeHTTP(c.Writer, c.Request)
