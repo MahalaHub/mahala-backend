@@ -8,7 +8,15 @@ const (
 	Plane Vehicle = 3
 )
 
+const (
+	Created  Status = 1
+	Accepted Status = 2
+	Rejected Status = 3
+	Closed   Status = 4
+)
+
 type Vehicle int
+type Status int
 
 type Transport struct {
 	ID        int       `json:"id"`
@@ -17,6 +25,7 @@ type Transport struct {
 	Cargo     Cargo     `json:"cargo"`
 	Carrier   Carrier   `json:"carrier"`
 	Notes     string    `json:"notes"`
+	Status    Status    `json:"status"`
 }
 
 type Cargo struct {
@@ -30,26 +39,39 @@ type Carrier struct {
 	PhoneNumber string `json:"phoneNumber"`
 }
 
-func RequestNew(transport Transport) (Transport, error) {
-	return transport, nil
+type Service struct {
+	repo Repository
 }
 
-func AnnounceNew(transport Transport) (Transport, error) {
-	return transport, nil
+type Repository interface {
+	AddTransport(transport Transport) (Transport, error)
+	UpdateStatus(transportID int, newStatus Status) error
 }
 
-func Accept(transportID int) error {
-	return nil
+func NewService(repo Repository) Service {
+	return Service{
+		repo: repo,
+	}
 }
 
-func Reject(transportID int) error {
-	return nil
+func (svc Service) RequestNew(transport Transport) (Transport, error) {
+	transport.Status = Created
+	return svc.repo.AddTransport(transport)
 }
 
-func Close(transportID int) error {
-	return nil
+func (svc Service) AnnounceNew(transport Transport) (Transport, error) {
+	transport.Status = Created
+	return svc.repo.AddTransport(transport)
 }
 
-func SuggestChange(transport Transport) error {
-	return nil
+func (svc Service) Accept(transportID int) error {
+	return svc.repo.UpdateStatus(transportID, Accepted)
+}
+
+func (svc Service) Reject(transportID int) error {
+	return svc.repo.UpdateStatus(transportID, Rejected)
+}
+
+func (svc Service) Close(transportID int) error {
+	return svc.repo.UpdateStatus(transportID, Closed)
 }
