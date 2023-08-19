@@ -2,7 +2,6 @@ package hangout
 
 import (
 	"github.com/google/uuid"
-	"github.com/sirupsen/logrus"
 )
 
 type Activity struct {
@@ -50,13 +49,8 @@ func NewActivityService(repo Repository) ActivityService {
 	}
 }
 
-func (svc ActivityService) CreateActivity(activity Activity) Activity {
-	createdActivity, err := svc.repo.AddActivity(activity)
-	if err != nil {
-		logrus.Infof("creating activity failed: %s", err)
-		return activity
-	}
-	return createdActivity
+func (svc ActivityService) CreateActivity(activity Activity) (Activity, error) {
+	return svc.repo.AddActivity(activity)
 }
 
 func (svc ActivityService) SearchActivities(filter SearchFilter) ([]Activity, error) {
