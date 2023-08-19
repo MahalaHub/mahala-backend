@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "Prevoz",
+    "description": "Prevoz putnika i robe",
+    "imageURL": "",
+    "ordering": 1,
+    "active": true
+  },
+  {
+    "id": 2,
+    "name": "Provod",
+    "description": "Pronađi lokaciju za izlazak",
+    "imageURL": "",
+    "ordering": 2,
+    "active": true
+  },
+  {
+    "id": 3,
+    "name": "Život",
+    "description": "Životni standard, računi, stanovi, hrana",
+    "imageURL": "",
+    "ordering": 3,
+    "active": false
+  },
+  {
+    "id": 4,
+    "name": "Onboarding",
+    "description": "Savjeti prilikom dolaska",
+    "imageURL": "",
+    "ordering": 4,
+    "active": false
+  },
+  {
+    "id": 5,
+    "name": "Papirologija",
+    "description": "Upute za raznu papirologiju",
+    "imageURL": "",
+    "ordering": 5,
+    "active": false
+  },
+  {
+    "id": 6,
+    "name": "Alati",
+    "description": "Razni korisni alati",
+    "imageURL": "",
+    "ordering": 6,
+    "active": false
+  }
+]
