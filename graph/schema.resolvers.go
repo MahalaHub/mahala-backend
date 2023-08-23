@@ -19,7 +19,7 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) 
 		Text: input.Text,
 		User: &model.User{
 			ID:   input.UserID,
-			Name: fmt.Sprintf("users - %v", input.UserID),
+			Name: fmt.Sprintf("user - %v", input.UserID),
 		},
 	}
 
