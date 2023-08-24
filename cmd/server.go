@@ -8,6 +8,7 @@ import (
 	"github.com/mahalahub/mahala/internal/mail"
 	"github.com/mahalahub/mahala/internal/redis"
 	"github.com/mahalahub/mahala/internal/web"
+	"github.com/mahalahub/mahala/transport"
 	"github.com/mahalahub/mahala/user"
 	"net/http"
 	"os"
@@ -56,7 +57,11 @@ func main() {
 		mailer.Send,
 	))
 
-	api.POST("/users/login", user.GenerateLoginCodeHandler(accMan))
+	api.POST("users/login", user.GenerateLoginCodeHandler(accMan))
+
+	transportRepo := integrations.NewTransportRepository(redisClient)
+	tansportService := transport.NewService(transportRepo)
+	api.POST("transports", transport.RequestNewHandler(tansportService))
 
 	web.ServeHttp(*httpAddr, "api", router)
 }

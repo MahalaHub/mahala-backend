@@ -18,12 +18,12 @@ const (
 type Vehicle int
 type Status int
 
-type Transport struct {
+type Ride struct {
 	ID        int       `json:"id"`
 	BeginsAt  time.Time `json:"beginsAt"`
 	ReturnsAt time.Time `json:"returnsAt"`
 	Cargo     Cargo     `json:"cargo"`
-	Carrier   Carrier   `json:"carrier"`
+	Rider     Rider     `json:"rider"`
 	Notes     string    `json:"notes"`
 	Status    Status    `json:"status"`
 }
@@ -33,7 +33,7 @@ type Cargo struct {
 	Materials      []string `json:"materials"`
 }
 
-type Carrier struct {
+type Rider struct {
 	Name        string `json:"name"`
 	Email       string `json:"email"`
 	PhoneNumber string `json:"phoneNumber"`
@@ -44,8 +44,8 @@ type Service struct {
 }
 
 type Repository interface {
-	AddTransport(transport Transport) (Transport, error)
-	UpdateStatus(transportID int, newStatus Status) error
+	AddRide(ride Ride) (Ride, error)
+	UpdateRideStatus(rideID int, newStatus Status) error
 }
 
 func NewService(repo Repository) Service {
@@ -54,24 +54,24 @@ func NewService(repo Repository) Service {
 	}
 }
 
-func (svc Service) RequestNew(transport Transport) (Transport, error) {
-	transport.Status = Created
-	return svc.repo.AddTransport(transport)
+func (svc Service) RequestNewRide(ride Ride) (Ride, error) {
+	ride.Status = Created
+	return svc.repo.AddRide(ride)
 }
 
-func (svc Service) AnnounceNew(transport Transport) (Transport, error) {
-	transport.Status = Created
-	return svc.repo.AddTransport(transport)
+func (svc Service) AnnounceNewRide(ride Ride) (Ride, error) {
+	ride.Status = Created
+	return svc.repo.AddRide(ride)
 }
 
-func (svc Service) Accept(transportID int) error {
-	return svc.repo.UpdateStatus(transportID, Accepted)
+func (svc Service) AcceptRide(rideID int) error {
+	return svc.repo.UpdateRideStatus(rideID, Accepted)
 }
 
-func (svc Service) Reject(transportID int) error {
-	return svc.repo.UpdateStatus(transportID, Rejected)
+func (svc Service) RejectRide(rideID int) error {
+	return svc.repo.UpdateRideStatus(rideID, Rejected)
 }
 
-func (svc Service) Close(transportID int) error {
-	return svc.repo.UpdateStatus(transportID, Closed)
+func (svc Service) CloseRide(rideID int) error {
+	return svc.repo.UpdateRideStatus(rideID, Closed)
 }
