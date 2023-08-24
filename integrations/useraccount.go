@@ -1,26 +1,49 @@
 package integrations
 
-import "github.com/mahalahub/mahala/user"
+import (
+	"encoding/json"
+	"errors"
+	"github.com/mahalahub/mahala/internal/redis"
+	"github.com/mahalahub/mahala/user"
+)
+
+const (
+	Accounts = "_accounts"
+)
 
 type UserRepository struct {
-	accounts []user.Account
+	redisClient *redis.Client
 }
 
-func NewUserRepository() *UserRepository {
-	return &UserRepository{}
+func NewUserRepository(redisClient *redis.Client) *UserRepository {
+	return &UserRepository{
+		redisClient: redisClient,
+	}
 }
 
 func (repo *UserRepository) GetUserAccount(username string) (user.Account, error) {
-	for _, acc := range repo.accounts {
-		if acc.Username == username {
-			return acc, nil
+	accountRaw, err := repo.redisClient.Get(username)
+	if err != nil && !errors.Is(err, redis.ErrNotExists) {
+		return user.Account{}, err
+	}
+
+	var acc user.Account
+	if len(accountRaw) > 0 {
+		if err = json.Unmarshal(accountRaw, &acc); err != nil {
+			return user.Account{}, err
 		}
 	}
-	return user.Account{}, nil
+
+	return acc, nil
 }
 
 func (repo *UserRepository) AddUserAccount(account user.Account) (user.Account, error) {
-	account.ID = len(repo.accounts) + 1
-	repo.accounts = append(repo.accounts, account)
+	if err := repo.redisClient.Add(redis.Item{
+		Key:   account.Username,
+		Value: account,
+	}); err != nil {
+		return user.Account{}, err
+	}
+
 	return account, nil
 }

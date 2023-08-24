@@ -6,6 +6,7 @@ import (
 	"github.com/mahalahub/mahala/graph"
 	"github.com/mahalahub/mahala/integrations"
 	"github.com/mahalahub/mahala/internal/mail"
+	"github.com/mahalahub/mahala/internal/redis"
 	"github.com/mahalahub/mahala/internal/web"
 	"github.com/mahalahub/mahala/user"
 	"net/http"
@@ -44,7 +45,11 @@ func main() {
 		UseEncryption: true,
 	})
 
-	userRepo := integrations.NewUserRepository()
+	redisConf := redis.NewConfig()
+	redisConf.DB = 1
+	redisClient := redis.NewClient(redisConf)
+
+	userRepo := integrations.NewUserRepository(redisClient)
 
 	accMan := user.NewAccountManagement(userRepo, integrations.SendMailNotificationForLoginCode(
 		mailU,

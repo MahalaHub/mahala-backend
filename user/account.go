@@ -39,7 +39,7 @@ func (accMan AccountManagement) GenerateLoginCode(username, email string) (strin
 		return "", err
 	}
 
-	if acc.ID > 0 && acc.Email != email {
+	if acc.Email != "" && acc.Email != email {
 		return "", existsErr
 	}
 
