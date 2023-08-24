@@ -1,15 +1,15 @@
-package integrations
+package mail
 
 import (
 	mail "github.com/xhit/go-simple-mail"
 	"time"
 )
 
-type MailSender struct {
+type Server struct {
 	smtpServer *mail.SMTPServer
 }
 
-type MailSenderConfig struct {
+type Config struct {
 	Host          string
 	Port          int
 	Username      string
@@ -17,7 +17,7 @@ type MailSenderConfig struct {
 	UseEncryption bool
 }
 
-func NewMailSender(conf MailSenderConfig) MailSender {
+func NewServer(conf Config) Server {
 	server := mail.NewSMTPClient()
 
 	server.Host = conf.Host
@@ -31,18 +31,12 @@ func NewMailSender(conf MailSenderConfig) MailSender {
 		server.Encryption = mail.EncryptionTLS
 	}
 
-	return MailSender{
+	return Server{
 		smtpServer: server,
 	}
 }
 
-func (m MailSender) Send(to, message string) error {
-	var from, cc, bcc, subject string
-
-	return m.send(from, to, cc, bcc, subject, message)
-}
-
-func (m MailSender) send(from, to, cc, bcc, subject, body string) error {
+func (m Server) Send(from, to, subject, body string) error {
 	smtpClient, err := m.smtpServer.Connect()
 	if err != nil {
 		return err
@@ -52,8 +46,6 @@ func (m MailSender) send(from, to, cc, bcc, subject, body string) error {
 
 	email.SetFrom(from)
 	email.AddTo(to)
-	email.AddCc(cc)
-	email.AddBcc(bcc)
 	email.SetSubject(subject)
 	email.SetBody(mail.TextHTML, body)
 
