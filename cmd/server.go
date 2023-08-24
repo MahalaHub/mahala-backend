@@ -27,7 +27,11 @@ func main() {
 	api := router.Group("api")
 
 	api.GET("healthz", func(c *gin.Context) {
-		c.JSON(http.StatusOK, "OK")
+		c.JSON(http.StatusOK, struct {
+			Status string `json:"status"`
+		}{
+			Status: "OK",
+		})
 	})
 
 	mailU := os.Getenv("MAIL_U")
