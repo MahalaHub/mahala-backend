@@ -12,7 +12,8 @@ type LoginRequest struct {
 }
 
 type LoginDetailsResponse struct {
-	Code string `json:"code"`
+	Code    string `json:"code"`
+	Message string `json:"message"`
 }
 
 func GenerateLoginCodeHandler(accMan AccountManagement) gin.HandlerFunc {
@@ -27,7 +28,7 @@ func GenerateLoginCodeHandler(accMan AccountManagement) gin.HandlerFunc {
 		loginCode, err := accMan.GenerateLoginCode(loginRequest.Username, loginRequest.Email)
 		if err != nil {
 			logrus.Error(err)
-			c.JSON(http.StatusBadRequest, err.Error())
+			c.JSON(http.StatusBadRequest, LoginDetailsResponse{Message: err.Error()})
 			return
 		}
 
