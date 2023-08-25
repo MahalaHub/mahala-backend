@@ -19,6 +19,6 @@ func TestMailSender_Send(t *testing.T) {
 		UseEncryption: true,
 	})
 
-	err := mailSender.Send("semirm.dev@gmail.com", "test")
+	err := mailSender.Send(mailU, "semirm.dev@gmail.com", "subject", "message")
 	assert.NoError(t, err)
 }
